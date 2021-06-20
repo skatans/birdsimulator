@@ -1,0 +1,300 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Bird Parent Simulator</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <style type="text/css">
+        body {
+            background-color: black;
+            margin: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div class="canvas-container">
+<script type="text/javascript">
+
+var config = {
+    type: Phaser.AUTO,
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 600 },
+            debug: false
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update
+    }
+};
+
+var player;
+var hasHytty = false;
+var babbeHunger = 100;
+var platforms;
+var cursors;
+var spaceBar;
+var score = 0;
+var gameOver = false;
+var scoreText;
+
+var game = new Phaser.Game(config);
+
+function preload ()
+{
+    this.load.image('sky', 'assets/sky.png');
+    this.load.image('ground', 'assets/platform.png');
+    this.load.spritesheet('birb', 'assets/birb_64.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('hyttybirb', 'assets/hyttybirb_64.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('babbe', 'assets/baby_32.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('hytty', 'assets/hytty_32.png', { frameWidth: 32, frameHeight: 32 });
+}
+
+function create ()
+{
+    this.add.image(400, 300, 'sky');
+
+    platforms = this.physics.add.staticGroup();
+    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    
+
+    // The player and its settings
+    player = this.physics.add.sprite(100, 450, 'birb');
+    player.setBounce(0);
+    player.setCollideWorldBounds(true);
+
+    // The mosquito and its settings
+    hytty = this.physics.add.sprite(200, 150, 'hytty');
+    hytty.allowGravity = false;
+    hytty.setBounce(1);
+    hytty.setCollideWorldBounds(true);
+    hytty.setVelocity(Phaser.Math.Between(-200, 200), 200);
+
+    // babbe birb
+    babbe = this.physics.add.sprite(50, 450, 'babbe');
+    babbe.setCollideWorldBounds(true);
+
+    //  Animations
+    this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNumbers('birb', { start: 4, end: 7 }),
+        frameRate: 32,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'stand',
+        frames: [ { key: 'birb', frame: 0 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'flap',
+        frames: this.anims.generateFrameNumbers('birb', { start: 8, end: 11 }),
+        frameRate: 32,
+        repeat: 2
+    });
+
+    this.anims.create({
+        key: 'glide',
+        frames: this.anims.generateFrameNumbers('birb', { start: 11, end: 11 }),
+        frameRate: 32,
+        repeat: -1
+    });
+
+    // babbemations
+    this.anims.create({
+        key: 'hungry',
+        frames: this.anims.generateFrameNumbers('babbe', { start: 0, end: 5 }),
+        frameRate: 16,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'eating',
+        frames: this.anims.generateFrameNumbers('babbe', { start: 6, end: 7 }),
+        frameRate: 16,
+        repeat: -1
+    });
+    
+    // Animations for when hytty is caught
+    this.anims.create({
+        key: 'hyttywalk',
+        frames: this.anims.generateFrameNumbers('hyttybirb', { start: 4, end: 7 }),
+        frameRate: 32,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'hyttystand',
+        frames: [ { key: 'hyttybirb', frame: 0 } ],
+        frameRate: 20
+    });
+
+    this.anims.create({
+        key: 'hyttyflap',
+        frames: this.anims.generateFrameNumbers('hyttybirb', { start: 8, end: 11 }),
+        frameRate: 32,
+        repeat: 2
+    });
+
+    this.anims.create({
+        key: 'hyttyglide',
+        frames: this.anims.generateFrameNumbers('hyttybirb', { start: 11, end: 11 }),
+        frameRate: 32,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'inin',
+        frames: this.anims.generateFrameNumbers('hytty', { start: 0, end: 4 }),
+        frameRate: 60,
+        repeat: -1
+    });
+
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+    spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    //  Texts on canvas
+    titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 550, 'Hyttys: 0', { fontSize: '32px', fill: '#fff' });
+
+    //  Colliders
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(babbe, platforms);
+    this.physics.add.collider(hytty, platforms);
+    this.physics.add.collider(player, hytty, hyttyCollider, null, this);
+    this.physics.add.collider(player, babbe, babbeCollider, null, this);
+
+}
+
+function hyttyCollider (player, hytty)
+{
+    if (!hasHytty)
+    {
+        gotHytty();
+    }
+}
+
+function babbeCollider (player, babbe)
+{
+    if (hasHytty)
+    {
+        feed(babbe);
+    }
+}
+
+function feed(babbe)
+{
+    player.anims.play('flap');
+    babbe.anims.play('eating');
+    babbeHunger = 0;
+    score += 1;
+    scoreText.setText('Hyttys: ' + score);
+    freeHytty();
+}
+
+function gotHytty ()
+{
+    console.log(hasHytty);
+    hasHytty = true;
+    player.anims.play('hyttyflap')
+    console.log(hasHytty);
+    hytty.visible = false;
+}
+
+function freeHytty()
+{
+    hasHytty = false;
+    hytty.visible = true;
+}
+
+function update ()
+{
+    const didPressJump = Phaser.Input.Keyboard.JustDown(spaceBar);
+    var hyttyMovement = Math.random()*10;
+
+    if (hasHytty)
+    {
+        hyttyStatus = 'hytty';
+    }
+    else
+    {
+        hyttyStatus = '';
+        hytty.anims.play('inin', true);
+    }
+
+    if (gameOver)
+    {
+        return;
+    }
+
+    if (hyttyMovement > 7)
+    {
+        hytty.setVelocityY(Math.random()*(-200)+80);
+        if (hyttyMovement > 9)
+        {
+            hytty.setVelocityX(Math.random()*1200-600);
+            hytty.setVelocityY(Math.random()*(-300)+90);
+        }
+    }
+
+    if (hytty.body.touching.down)
+    {
+        hytty.setVelocityY(Math.random()*(-300));
+    }
+
+    if (babbeHunger++ > 100)
+    {
+        babbe.anims.play('hungry', true);
+    }
+
+    // birb controls
+    if (cursors.left.isDown)
+    {
+        player.setVelocityX(-160);
+        player.flipX = false;
+        if (player.body.touching.down) {
+            player.anims.play(hyttyStatus + 'walk', true);
+        }
+    }
+    else if (cursors.right.isDown)
+    {
+        player.setVelocityX(160);
+        player.flipX = true;
+        if (player.body.touching.down) {
+            player.anims.play(hyttyStatus + 'walk', true);
+        }
+    }
+    else if (player.body.touching.down)
+    {
+        player.setVelocityX(0);
+        player.anims.play(hyttyStatus + 'stand');
+    }
+    else
+    {
+        player.anims.play(hyttyStatus + 'glide');
+    }
+
+    if (didPressJump)
+    {
+        player.setVelocityY(-330);
+        player.anims.play(hyttyStatus + 'flap', true);
+       
+    }
+
+}
+
+</script>
+</div>
+</body>
+</html>
