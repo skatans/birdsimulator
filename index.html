@@ -288,8 +288,13 @@ function horizontalMovement(velocity)
     player.setVelocityX(velocity);
     player.flipX = velocity + 160;
     
-    if (player.body.touching.down) {
+    if (player.body.touching.down)
+    {
         player.anims.play(hyttyStatus + 'walk', true);
+    }
+    else
+    {
+        player.anims.play(hyttyStatus + 'glide', true);
     }
 }
 
