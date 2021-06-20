@@ -82,6 +82,25 @@ function create ()
     babbe = this.physics.add.sprite(50, 450, 'babbe');
     babbe.setCollideWorldBounds(true);
 
+    //  Colliders
+    this.physics.add.collider(player, platforms);
+    this.physics.add.collider(babbe, platforms);
+    this.physics.add.collider(hytty, platforms);
+    
+    hyttyCollider = this.physics.add.collider(player, hytty, getHytty, null, this);
+    babbeCollider = this.physics.add.collider(player, babbe, feedBabbe, null, this);
+
+    hyttyCollider.overlapOnly = true;
+    babbeCollider.overlapOnly = true;
+
+    //  Input Events
+    cursors = this.input.keyboard.createCursorKeys();
+    spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    //  Texts on canvas
+    titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
+    scoreText = this.add.text(16, 550, 'Hyttys: 0', { fontSize: '32px', fill: '#fff' });
+
     //  Animations
     this.anims.create({
         key: 'walk',
@@ -159,25 +178,9 @@ function create ()
         frameRate: 60,
         repeat: -1
     });
-
-    //  Input Events
-    cursors = this.input.keyboard.createCursorKeys();
-    spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
-    //  Texts on canvas
-    titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
-    scoreText = this.add.text(16, 550, 'Hyttys: 0', { fontSize: '32px', fill: '#fff' });
-
-    //  Colliders
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(babbe, platforms);
-    this.physics.add.collider(hytty, platforms);
-    this.physics.add.collider(player, hytty, hyttyCollider, null, this);
-    this.physics.add.collider(player, babbe, babbeCollider, null, this);
-
 }
 
-function hyttyCollider (player, hytty)
+function getHytty (player, hytty)
 {
     if (!hasHytty)
     {
@@ -185,7 +188,7 @@ function hyttyCollider (player, hytty)
     }
 }
 
-function babbeCollider (player, babbe)
+function feedBabbe (player, babbe)
 {
     if (hasHytty)
     {
@@ -259,22 +262,8 @@ function update ()
     }
 
     // birb controls
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        player.flipX = false;
-        if (player.body.touching.down) {
-            player.anims.play(hyttyStatus + 'walk', true);
-        }
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        player.flipX = true;
-        if (player.body.touching.down) {
-            player.anims.play(hyttyStatus + 'walk', true);
-        }
-    }
+    if (cursors.left.isDown) { horizontalMovement(-160) }
+    else if (cursors.right.isDown) { horizontalMovement(160) }
     else if (player.body.touching.down)
     {
         player.setVelocityX(0);
@@ -292,6 +281,16 @@ function update ()
        
     }
 
+}
+
+function horizontalMovement(velocity)
+{
+    player.setVelocityX(velocity);
+    player.flipX = velocity + 160;
+    
+    if (player.body.touching.down) {
+        player.anims.play(hyttyStatus + 'walk', true);
+    }
 }
 
 </script>
