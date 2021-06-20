@@ -86,7 +86,7 @@ function create ()
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(babbe, platforms);
     this.physics.add.collider(hytty, platforms);
-    
+
     hyttyCollider = this.physics.add.collider(player, hytty, getHytty, null, this);
     babbeCollider = this.physics.add.collider(player, babbe, feedBabbe, null, this);
 
@@ -196,7 +196,7 @@ function feedBabbe (player, babbe)
     }
 }
 
-function feed(babbe)
+function feed (babbe)
 {
     player.anims.play('flap');
     babbe.anims.play('eating');
@@ -213,28 +213,115 @@ function gotHytty ()
     player.anims.play('hyttyflap')
     console.log(hasHytty);
     hytty.visible = false;
+    hyttyCollider.active = false;
 }
 
 function freeHytty()
 {
     hasHytty = false;
     hytty.visible = true;
+    hyttyCollider.active = true;
 }
+
+// birb states
+
+function fly(){
+    if (player.body.touching.down)
+    {
+        player.setVelocityX(0);
+        return idle;
+    }
+    if (Phaser.Input.Keyboard.JustDown(spaceBar)){   
+        console.log("Flapping in air");     
+        flapWings(hasHytty);
+    }
+    if (cursors.left.isDown)
+    { 
+        horizontalMovement(-160);
+        return fly;
+    }
+    if (cursors.right.isDown)
+    { 
+        horizontalMovement(160);
+        return fly;
+    }
+    return fly; 
+}
+
+function walk(hasHytty){
+    console.log("walking");
+    if (Phaser.Input.Keyboard.JustDown(spaceBar)){
+        console.log("Transitioning to jump");
+        flapWings(hasHytty);
+        return fly;
+    }
+    if (cursors.left.isDown)
+    { 
+        horizontalMovement(-160);
+        return walk;
+    }
+    if (cursors.right.isDown)
+    { 
+        horizontalMovement(160);
+        return walk;
+    }
+    hasHytty ? player.anims.play('hyttystand', true) : player.anims.play('stand', true);
+    return idle;
+}
+
+function idle(hasHytty){
+    console.log('idle');
+    if (Phaser.Input.Keyboard.JustDown(spaceBar)){
+        console.log("Transitioning to jump");
+        flapWings(hasHytty);
+        return fly;
+    }
+    if (cursors.left.isDown)
+    { 
+        horizontalMovement(-160);
+        return walk;
+    }
+    if (cursors.right.isDown)
+    { 
+        horizontalMovement(160);
+        return walk;
+    }
+
+    hasHytty ? player.anims.play('hyttystand', true) : player.anims.play('stand', true);
+    
+    if (player.body.touching.down)
+    {
+        player.setVelocityX(0);
+    }
+    return idle;
+}
+
+function horizontalMovement(velocity)
+{
+    player.setVelocityX(velocity);
+    player.flipX = velocity + 160;
+    
+    if (player.body.touching.down) {
+        hasHytty ? player.anims.play('hyttywalk', true) : player.anims.play('walk', true);
+    }
+}
+
+function flapWings(hasHytty){
+    player.setVelocityY(-330);
+    hasHytty ? player.anims.play('hyttyflap', true) : player.anims.play('flap', true);
+}
+
+var state = idle;
 
 function update ()
 {
+    state = state(hasHytty);
+
     const didPressJump = Phaser.Input.Keyboard.JustDown(spaceBar);
+    
     var hyttyMovement = Math.random()*10;
 
-    if (hasHytty)
-    {
-        hyttyStatus = 'hytty';
-    }
-    else
-    {
-        hyttyStatus = '';
-        hytty.anims.play('inin', true);
-    }
+    hytty.anims.play('inin', true);
 
     if (gameOver)
     {
@@ -259,42 +346,6 @@ function update ()
     if (babbeHunger++ > 100)
     {
         babbe.anims.play('hungry', true);
-    }
-
-    // birb controls
-    if (cursors.left.isDown) { horizontalMovement(-160) }
-    else if (cursors.right.isDown) { horizontalMovement(160) }
-    else if (player.body.touching.down)
-    {
-        player.setVelocityX(0);
-        player.anims.play(hyttyStatus + 'stand');
-    }
-    else
-    {
-        player.anims.play(hyttyStatus + 'glide');
-    }
-
-    if (didPressJump)
-    {
-        player.setVelocityY(-330);
-        player.anims.play(hyttyStatus + 'flap', true);
-       
-    }
-
-}
-
-function horizontalMovement(velocity)
-{
-    player.setVelocityX(velocity);
-    player.flipX = velocity + 160;
-    
-    if (player.body.touching.down)
-    {
-        player.anims.play(hyttyStatus + 'walk', true);
-    }
-    else
-    {
-        player.anims.play(hyttyStatus + 'glide', true);
     }
 }
 
