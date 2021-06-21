@@ -31,6 +31,9 @@ var config = {
 function preload ()
 {
     this.load.image('sky', 'assets/sky.png');
+    this.load.image('grass', 'assets/nurtsi.png');
+    this.load.image('grassLight', 'assets/nurtsiLight.png');
+    this.load.image('grassDark', 'assets/nurtsiDark.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.spritesheet('birb', 'assets/birb_64.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('hyttybirb', 'assets/hyttybirb_64.png', { frameWidth: 64, frameHeight: 64 });
@@ -46,12 +49,15 @@ function create ()
     this.add.image(400, 300, 'sky');
 
     platforms = this.physics.add.staticGroup();
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platforms.create(400, 580, 'ground').setScale(2).refreshBody();
+    this.add.tileSprite(400, 550, 850, 64, 'grassLight');
 
     // The player and its settings
     player = this.physics.add.sprite(100, 450, 'birb');
     player.setBounce(0);
     player.setCollideWorldBounds(true);
+
+    this.add.tileSprite(400, 565, 800, 64, 'grass');
 
     // The mosquito and its settings
     hytty = this.physics.add.sprite(200, 150, 'hytty');
@@ -61,8 +67,10 @@ function create ()
     hytty.setVelocity(Phaser.Math.Between(-200, 200), 200);
 
     // babbe birb
-    babbe = this.physics.add.sprite(50, 520, 'babbe', 0);
+    babbe = this.physics.add.sprite(46, 520, 'babbe', 0);
     babbe.setCollideWorldBounds(true);
+
+    this.add.tileSprite(400, 580, 800, 64, 'grassDark');
 
     //  Colliders
     this.physics.add.collider(babbe, platforms);
@@ -82,7 +90,7 @@ function create ()
 
     //  Texts on canvas
     titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
-    scoreText = this.add.text(16, 555, 'Hyttys: 0', { fontSize: '32px', fill: '#fff' });
+    scoreText = this.add.text(16, 575, 'Hyttys: 0', { fontSize: '16px', fill: '#fff' });
 }
 
 function update ()
