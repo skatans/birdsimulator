@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <title>Bird Parent Simulator</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+    <script src="js/birdState.js"></script>
+    <script src="js/hyttyStuff.js"></script>
     <style type="text/css">
         body {
             background-color: black;
@@ -39,6 +41,7 @@ var config = {
 var player;
 var hasHytty = false;
 var babbeHunger = 100;
+var birbState = idle;
 var platforms;
 var cursors;
 var spaceBar;
@@ -83,9 +86,9 @@ function create ()
     babbe.setCollideWorldBounds(true);
 
     //  Colliders
-    this.physics.add.collider(player, platforms);
     this.physics.add.collider(babbe, platforms);
     this.physics.add.collider(hytty, platforms);
+    this.physics.add.collider(player, platforms);
 
     hyttyCollider = this.physics.add.collider(player, hytty, getHytty, null, this);
     babbeCollider = this.physics.add.collider(player, babbe, feedBabbe, null, this);
@@ -180,172 +183,16 @@ function create ()
     });
 }
 
-function getHytty (player, hytty)
-{
-    if (!hasHytty)
-    {
-        gotHytty();
-    }
-}
-
-function feedBabbe (player, babbe)
-{
-    if (hasHytty)
-    {
-        feed(babbe);
-    }
-}
-
-function feed (babbe)
-{
-    player.anims.play('flap');
-    babbe.anims.play('eating');
-    babbeHunger = 0;
-    score += 1;
-    scoreText.setText('Hyttys: ' + score);
-    freeHytty();
-}
-
-function gotHytty ()
-{
-    console.log(hasHytty);
-    hasHytty = true;
-    player.anims.play('hyttyflap')
-    console.log(hasHytty);
-    hytty.visible = false;
-    hyttyCollider.active = false;
-}
-
-function freeHytty()
-{
-    hasHytty = false;
-    hytty.visible = true;
-    hyttyCollider.active = true;
-}
-
-// birb states
-
-function fly(){
-    if (player.body.touching.down)
-    {
-        player.setVelocityX(0);
-        return idle;
-    }
-    if (Phaser.Input.Keyboard.JustDown(spaceBar)){   
-        console.log("Flapping in air");     
-        flapWings(hasHytty);
-    }
-    if (cursors.left.isDown)
-    { 
-        horizontalMovement(-160);
-        return fly;
-    }
-    if (cursors.right.isDown)
-    { 
-        horizontalMovement(160);
-        return fly;
-    }
-    return fly; 
-}
-
-function walk(hasHytty){
-    console.log("walking");
-    if (Phaser.Input.Keyboard.JustDown(spaceBar)){
-        console.log("Transitioning to jump");
-        flapWings(hasHytty);
-        return fly;
-    }
-    if (cursors.left.isDown)
-    { 
-        horizontalMovement(-160);
-        return walk;
-    }
-    if (cursors.right.isDown)
-    { 
-        horizontalMovement(160);
-        return walk;
-    }
-    hasHytty ? player.anims.play('hyttystand', true) : player.anims.play('stand', true);
-    return idle;
-}
-
-function idle(hasHytty){
-    console.log('idle');
-    if (Phaser.Input.Keyboard.JustDown(spaceBar)){
-        console.log("Transitioning to jump");
-        flapWings(hasHytty);
-        return fly;
-    }
-    if (cursors.left.isDown)
-    { 
-        horizontalMovement(-160);
-        return walk;
-    }
-    if (cursors.right.isDown)
-    { 
-        horizontalMovement(160);
-        return walk;
-    }
-
-    hasHytty ? player.anims.play('hyttystand', true) : player.anims.play('stand', true);
-    
-    if (player.body.touching.down)
-    {
-        player.setVelocityX(0);
-    }
-    return idle;
-}
-
-function horizontalMovement(velocity)
-{
-    player.setVelocityX(velocity);
-    player.flipX = velocity + 160;
-    
-    if (player.body.touching.down) {
-        hasHytty ? player.anims.play('hyttywalk', true) : player.anims.play('walk', true);
-    }
-}
-
-function flapWings(hasHytty){
-    player.setVelocityY(-330);
-    hasHytty ? player.anims.play('hyttyflap', true) : player.anims.play('flap', true);
-}
-
-var state = idle;
-
 function update ()
 {
-    state = state(hasHytty);
+    birbState = birbState(hasHytty);
 
-    const didPressJump = Phaser.Input.Keyboard.JustDown(spaceBar);
-    
-    var hyttyMovement = Math.random()*10;
-
-    hytty.anims.play('inin', true);
+    hyttyBusiness();
+    babbeBusiness();
 
     if (gameOver)
     {
         return;
-    }
-
-    if (hyttyMovement > 7)
-    {
-        hytty.setVelocityY(Math.random()*(-200)+80);
-        if (hyttyMovement > 9)
-        {
-            hytty.setVelocityX(Math.random()*1200-600);
-            hytty.setVelocityY(Math.random()*(-300)+90);
-        }
-    }
-
-    if (hytty.body.touching.down)
-    {
-        hytty.setVelocityY(Math.random()*(-300));
-    }
-
-    if (babbeHunger++ > 100)
-    {
-        babbe.anims.play('hungry', true);
     }
 }
 
