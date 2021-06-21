@@ -1,0 +1,332 @@
+{"anims": [
+    {
+        "key": "walk",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "birb",
+                "frame": 4,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 5,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 6,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 7,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 125,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "stand",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "birb",
+                "frame": 0,
+                "duration": 0
+            }
+        ],
+        "frameRate": 20,
+        "duration": 50,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": 0,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "flap",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "birb",
+                "frame": 8,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 9,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 10,
+                "duration": 0
+            },
+            {
+                "key": "birb",
+                "frame": 11,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 125,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": 2,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "glide",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "birb",
+                "frame": 11,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 31.25,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "hungry",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "babbe",
+                "frame": 0,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 1,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 2,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 3,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 4,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 5,
+                "duration": 0
+            }
+        ],
+        "frameRate": 16,
+        "duration": 375,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "eating",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "babbe",
+                "frame": 6,
+                "duration": 0
+            },
+            {
+                "key": "babbe",
+                "frame": 7,
+                "duration": 0
+            }
+        ],
+        "frameRate": 16,
+        "duration": 125,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "hyttywalk",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "hyttybirb",
+                "frame": 4,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 5,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 6,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 7,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 125,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "hyttystand",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "hyttybirb",
+                "frame": 0,
+                "duration": 0
+            }
+        ],
+        "frameRate": 20,
+        "duration": 50,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": 0,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "hyttyflap",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "hyttybirb",
+                "frame": 8,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 9,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 10,
+                "duration": 0
+            },
+            {
+                "key": "hyttybirb",
+                "frame": 11,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 125,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": 2,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "hyttyglide",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "hyttybirb",
+                "frame": 11,
+                "duration": 0
+            }
+        ],
+        "frameRate": 32,
+        "duration": 31.25,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    },
+    {
+        "key": "inin",
+        "type": "frame",
+        "frames": [
+            {
+                "key": "hytty",
+                "frame": 0,
+                "duration": 0
+            },
+            {
+                "key": "hytty",
+                "frame": 1,
+                "duration": 0
+            },
+            {
+                "key": "hytty",
+                "frame": 2,
+                "duration": 0
+            },
+            {
+                "key": "hytty",
+                "frame": 3,
+                "duration": 0
+            },
+            {
+                "key": "hytty",
+                "frame": 4,
+                "duration": 0
+            }
+        ],
+        "frameRate": 60,
+        "duration": 83.33333333333333,
+        "skipMissedFrames": true,
+        "delay": 0,
+        "repeat": -1,
+        "repeatDelay": 0,
+        "yoyo": false,
+        "showOnStart": false,
+        "hideOnComplete": false
+    }
+]}
