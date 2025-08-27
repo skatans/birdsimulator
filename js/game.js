@@ -88,6 +88,14 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
     spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+        // Mouse click triggers fly
+    this.input.on('pointerdown', function (pointer) {
+        // Store click coordinates for direction
+        window.pointerClicked = true;
+        window.pointerClickX = pointer.x;
+        window.pointerClickY = pointer.y;
+    });
+
     //  Texts on canvas
     titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
     scoreText = this.add.text(16, 575, 'Hyttys: 0', { fontSize: '16px', fill: '#fff' });
