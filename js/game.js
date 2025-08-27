@@ -101,12 +101,27 @@ function create ()
     cursors = this.input.keyboard.createCursorKeys();
     spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
-        // Mouse click triggers fly
+    // Mouse input for movement and flying
     this.input.on('pointerdown', function (pointer) {
-        // Store click coordinates for direction
-        window.pointerClicked = true;
-        window.pointerClickX = pointer.x;
-        window.pointerClickY = pointer.y;
+        // Calculate direction from bird to click position
+        var dx = pointer.x - player.x;
+        window.mouseDirection = dx > 0 ? 'right' : 'left';
+        window.mousePressed = true;
+        window.mouseDownTime = Date.now(); // Record when mouse was pressed
+        window.pointerClicked = false; // Don't trigger immediate fly
+    });
+
+    this.input.on('pointerup', function (pointer) {
+        // Only trigger fly if mouse was held down for less than 200 milliseconds
+        var holdDuration = Date.now() - window.mouseDownTime;
+        if (holdDuration < 200) {
+            window.pointerClicked = true;
+            window.pointerClickX = pointer.x;
+            window.pointerClickY = pointer.y;
+        }
+        window.mousePressed = false;
+        window.mouseDirection = null;
+        window.mouseDownTime = null;
     });
 
     //  Texts on canvas

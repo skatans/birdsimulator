@@ -24,11 +24,11 @@ function fly()
         window.pointerClickX = undefined;
         window.pointerClickY = undefined;
     }
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || window.mouseDirection === 'left')
     { 
         horizontalMovement(-160);
     }
-    if (cursors.right.isDown)
+    if (cursors.right.isDown || window.mouseDirection === 'right')
     { 
         horizontalMovement(160);
     }
@@ -55,12 +55,12 @@ function walk(hasHytty)
         window.pointerClickY = undefined;
         return fly;
     }
-    if (cursors.left.isDown)
+    if (cursors.left.isDown || window.mouseDirection === 'left')
     { 
         horizontalMovement(-160);
         return walk;
     }
-    if (cursors.right.isDown)
+    if (cursors.right.isDown || window.mouseDirection === 'right')
     { 
         horizontalMovement(160);
         return walk;
@@ -90,7 +90,7 @@ function idle(hasHytty)
         window.pointerClickY = undefined;
         return fly;
     }
-    if (cursors.left.isDown || cursors.right.isDown)
+    if (cursors.left.isDown || cursors.right.isDown || window.mouseDirection)
     { 
         return walk;
     }
