@@ -43,6 +43,16 @@ function feedBabbe()
         babbeHunger = 0;
         score += 1;
         scoreText.setText('Hyttys: ' + score);
+        
+        // Make baby bird grow after eating animation completes
+        babbe.on('animationcomplete', function(anim) {
+            if (anim.key === 'eating') {
+                babbeGrowth += 0.1; // Grow by 10% each feeding
+                babbe.setScale(babbeGrowth);
+                babbe.off('animationcomplete'); // Remove listener to avoid multiple triggers
+            }
+        });
+        
         freeHytty();
     }
 }

@@ -1,6 +1,7 @@
 var player;
 var hasHytty = false;
 var babbeHunger = 100;
+var babbeGrowth = 1.0; // Initial size
 var birbState = idle;
 var platforms;
 var cursors;
