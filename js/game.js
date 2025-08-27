@@ -11,8 +11,8 @@ var scoreText;
 
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: window.innerWidth,
+    height: window.innerHeight,
     physics: {
         default: 'arcade',
         arcade: {
@@ -26,6 +26,13 @@ var config = {
         update: update
     }
 };
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    if (game && game.scale) {
+        game.scale.resize(window.innerWidth, window.innerHeight);
+    }
+});
 
 
 function preload ()
@@ -44,20 +51,26 @@ function preload ()
 
 function create ()
 {
+    var width = this.sys.game.config.width;
+    var height = this.sys.game.config.height;
+    
     hyttyBlock = this.physics.add.staticGroup();
-    hyttyBlock.create(80, 520).setScale(5).refreshBody();
-    this.add.image(400, 300, 'sky');
+    hyttyBlock.create(80, height - 80).setScale(5).refreshBody();
+    
+    // Scale sky to fill the viewport
+    var sky = this.add.image(width / 2, height / 2, 'sky');
+    sky.setDisplaySize(width, height);
 
     platforms = this.physics.add.staticGroup();
-    platforms.create(400, 580, 'ground').setScale(2).refreshBody();
-    this.add.tileSprite(400, 550, 850, 64, 'grassLight');
+    platforms.create(width / 2, height - 20, 'ground').setScale(width / 400, 1).refreshBody();
+    this.add.tileSprite(width / 2, height - 50, width, 64, 'grassLight');
 
     // The player and its settings
-    player = this.physics.add.sprite(100, 450, 'birb');
+    player = this.physics.add.sprite(100, height - 150, 'birb');
     player.setBounce(0);
     player.setCollideWorldBounds(true);
 
-    this.add.tileSprite(400, 565, 800, 64, 'grass');
+    this.add.tileSprite(width / 2, height - 35, width, 64, 'grass');
 
     // The mosquito and its settings
     hytty = this.physics.add.sprite(200, 150, 'hytty');
@@ -67,10 +80,10 @@ function create ()
     hytty.setVelocity(Phaser.Math.Between(-200, 200), 200);
 
     // babbe birb
-    babbe = this.physics.add.sprite(46, 520, 'babbe', 0);
+    babbe = this.physics.add.sprite(46, height - 80, 'babbe', 0);
     babbe.setCollideWorldBounds(true);
 
-    this.add.tileSprite(400, 580, 800, 64, 'grassDark');
+    this.add.tileSprite(width / 2, height - 20, width, 64, 'grassDark');
 
     //  Colliders
     this.physics.add.collider(babbe, platforms);
@@ -98,7 +111,7 @@ function create ()
 
     //  Texts on canvas
     titleText = this.add.text(16, 16, 'Bird Parent Simulator', { fontSize: '32px', fill: '#000' });
-    scoreText = this.add.text(16, 575, 'Hyttys: 0', { fontSize: '16px', fill: '#fff' });
+    scoreText = this.add.text(16, height - 25, 'Hyttys: 0', { fontSize: '16px', fill: '#fff' });
 }
 
 function update ()
